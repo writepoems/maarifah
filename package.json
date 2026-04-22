@@ -1,0 +1,22 @@
+{
+  "name": "maarifah",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "dev": "bun run --hot ./src/server.ts",
+    "db:setup": "cd assets && bun run setup.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "@types/pg": "^8.20.0"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "hono": "^4.12.14",
+    "pg": "^8.20.0",
+    "udsv": "^0.7.3"
+  }
+}

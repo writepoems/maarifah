@@ -40,6 +40,7 @@ async function main() {
     password: config.DB_PASSWORD,
     host: config.DB_HOST,
     port: config.DB_PORT,
+    database: config.DB_NAME
   })
 
   await pg.connect()

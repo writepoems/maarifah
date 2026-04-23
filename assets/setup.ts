@@ -9,8 +9,10 @@
 import { Client } from "pg"
 import { inferSchema, initParser } from "udsv"
 
-import config from "./config.json"
 import { sys } from "typescript"
+import { styleText } from "node:util"
+
+import config from "./config.json"
 
 type Item = {
   surah_no: number
@@ -73,7 +75,13 @@ async function main() {
 
   const startImportTime = Date.now()
 
+  let importedCount = 0
+  let progress = 0
+
   for (const item of data) {
+    importedCount++
+    progress++
+
     await pg.query(`
       INSERT INTO quran (
         surah_no,
@@ -105,10 +113,28 @@ async function main() {
         item.place_of_revelation
       ]
     )
+
+    if (progress !== 4) continue
+
+    process.stdout.clearLine(0)
+    process.stdout.cursorTo(0)
+
+    let done = importedCount / 6236
+    let progressText = styleText("yellow", ((importedCount / 6236) * 100).toFixed(2))
+
+    if (done === 1) {
+      progressText = styleText("green", (100).toFixed(2))
+    }
+
+    process.stdout.write(
+      `Progress: ${progressText}%`
+    )
+
+    progress = 0
   }
   
   const finishTime = Date.now()
-  console.log("Imported items, took", finishTime - startImportTime, "ms")
+  console.log("\nImported items, took", finishTime - startImportTime, "ms")
 
   sys.exit(0)
 }
